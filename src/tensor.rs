@@ -16,8 +16,26 @@ impl Tensor {
             grad: None
         }
     }
+    pub fn shape(&self) -> &Vec<usize> {
+        &self.shape
+    }
+    pub fn transpose(&self) -> Tensor {
+        assert_eq!(self.shape.len(), 2, "Transpose only supports 2D tensors.");
+        let (rows, cols) = (self.shape[0], self.shape[1]);
+        let mut transposed_data = vec![0.0; rows * cols];
+        for i in 0..rows {
+            for j in 0..cols {
+                transposed_data[j * rows + i] = self.data[i * cols + j];
+            }
+        }
+        Tensor {
+            data: transposed_data,
+            shape: vec![cols, rows],
+            grad: None,
+        }
+    }
     pub fn add(x: &Tensor, y: &Tensor) -> Tensor {
-        assert_eq!(x.shape, y.shape);
+        assert_eq!(x.shape(), y.shape());
         Tensor {
             data: x.data.iter().zip(y.data.iter()).map(|(a,b)| a+b).collect(),
             shape: x.shape.clone(),
@@ -26,8 +44,8 @@ impl Tensor {
     }
     pub fn matmul(x: &Tensor, y: &Tensor) -> Tensor {
         // Only support 2D mul for now
-        assert_eq!(x.shape.len(), 2);
-        assert_eq!(y.shape.len(), 2);
+        assert_eq!(x.shape().len(), 2);
+        assert_eq!(y.shape().len(), 2);
         let (m, n) = (x.shape[0], x.shape[1]);
         let (p, q) = (y.shape[0], y.shape[1]);
 
@@ -47,7 +65,7 @@ impl Tensor {
 
         Tensor {
             data: result_data,
-            shape: vec![m, p],
+            shape: vec![m, q],
             grad: None,
         }
     }
