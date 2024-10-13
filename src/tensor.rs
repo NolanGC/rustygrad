@@ -1,10 +1,10 @@
-use std::fmt;
+use std::{fmt, path::Iter};
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct Tensor {
-    data: Vec<f32>,
+    pub data: Vec<f32>,
     shape: Vec<usize>,
-    grad: Option<Box<Tensor>>,
+    pub grad: Option<Box<Tensor>>,
 }
 
 impl Tensor {
@@ -19,6 +19,7 @@ impl Tensor {
     pub fn shape(&self) -> &Vec<usize> {
         &self.shape
     }
+
     pub fn transpose(&self) -> Tensor {
         assert_eq!(self.shape.len(), 2, "Transpose only supports 2D tensors.");
         let (rows, cols) = (self.shape[0], self.shape[1]);
