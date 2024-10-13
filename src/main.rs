@@ -21,7 +21,7 @@ fn main() {
     ];
     let learning_rate = 0.1;
 
-    let epochs = 1000;
+    let epochs = 100;
     for epoch in 0..epochs {
         let mut total_loss = 0.0;
 
@@ -32,6 +32,7 @@ fn main() {
             let loss = compute_mse_loss(&output, &target);
             total_loss += loss.data[0];
             let grad_loss = compute_mse_loss_grad(&output, &target);
+            //println!("{:?}", grad_loss);
             model.backward(&grad_loss);
             {
                 let mut params = model.parameters_mut();
@@ -40,7 +41,7 @@ fn main() {
                 optimizer.zero_grad();
             }
         }
-        if epoch % 100 == 0 {
+        if epoch % 10 == 0 {
             println!("Epoch {:5}: Loss = {:.4}", epoch, total_loss / 4.0);
         }
     }
