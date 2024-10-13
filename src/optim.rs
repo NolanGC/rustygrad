@@ -1,7 +1,6 @@
 
 use crate::tensor::Tensor;
 
-/// Optimizer for updating model parameters.
 pub struct Optim<'a> {
     params: Vec<&'a mut Tensor>,
     lr: f32,
