@@ -3,7 +3,7 @@ use std::{fmt, path::Iter};
 #[derive(PartialEq, Clone)]
 pub struct Tensor {
     pub data: Vec<f32>,
-    shape: Vec<usize>,
+    pub shape: Vec<usize>,
     pub grad: Option<Box<Tensor>>,
 }
 
@@ -15,9 +15,6 @@ impl Tensor {
             shape: shape,
             grad: None
         }
-    }
-    pub fn shape(&self) -> &Vec<usize> {
-        &self.shape
     }
 
     pub fn transpose(&self) -> Tensor {
@@ -36,7 +33,7 @@ impl Tensor {
         }
     }
     pub fn add(x: &Tensor, y: &Tensor) -> Tensor {
-        assert_eq!(x.shape(), y.shape());
+        assert_eq!(x.shape, y.shape);
         Tensor {
             data: x.data.iter().zip(y.data.iter()).map(|(a,b)| a+b).collect(),
             shape: x.shape.clone(),
@@ -45,8 +42,8 @@ impl Tensor {
     }
     pub fn matmul(x: &Tensor, y: &Tensor) -> Tensor {
         // Only support 2D mul for now
-        assert_eq!(x.shape().len(), 2);
-        assert_eq!(y.shape().len(), 2);
+        assert_eq!(x.shape.len(), 2);
+        assert_eq!(y.shape.len(), 2);
         let (m, n) = (x.shape[0], x.shape[1]);
         let (p, q) = (y.shape[0], y.shape[1]);
 

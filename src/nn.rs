@@ -49,7 +49,7 @@ impl Linear {
 impl Module for Linear {
     fn forward(&mut self, x: &Tensor) -> Tensor {
         assert_eq!(
-            x.shape()[0],
+            x.shape[0],
             self.in_features,
             "Input tensor shape mismatch."
         );
@@ -97,7 +97,7 @@ impl Module for ReLU {
     fn forward(&mut self, x: &Tensor) -> Tensor {
         self.x_in = Some(x.clone());
         let data = x.data.iter().map(|&v| v.max(0.0)).collect();
-        Tensor::new(data, x.shape().clone())
+        Tensor::new(data, x.shape.clone())
     }
 
     fn backward(&mut self, j_out: &Tensor) -> Tensor {
@@ -108,7 +108,7 @@ impl Module for ReLU {
                 .zip(j_out.data.iter())
                 .map(|(&x, &j)| if x > 0.0 { j } else { 0.0 })
                 .collect();
-            Tensor::new(grad, j_out.shape().clone())
+            Tensor::new(grad, j_out.shape.clone())
         } else {
             panic!("No cached inputs during backward pass");
         }
